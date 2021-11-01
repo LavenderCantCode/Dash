@@ -11,7 +11,25 @@ const schema = new Schema({
    premium: {
       type: Boolean,
       default: false
+   },
+   mutedRole: {
+      type: String,
+   },
+   removeRolesOnMute: {
+      type: Boolean,
+      default: true
+   },
+   deleteModerationMessage: {
+      type: Boolean,
+      default: true
+   },
+   maxWarnsBeforeBan: {
+      type: Number
+   },
+   disabledCommands: {
+      type: Array,
+      default: []
    }
 })
-const Model =  model("Guilds", schema)
-export default Model
+const Guilds =  model("Guilds", schema)
+export default Guilds

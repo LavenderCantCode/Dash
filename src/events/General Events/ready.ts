@@ -5,4 +5,8 @@ export const event: Event = {
 }
 export const run: Run = (client) => {
    console.log(client.user.tag + " is now online")
+   client.user.setStatus("dnd")
+   setInterval(() => {
+      client.user.setActivity(`d!help | watching over ${client.guilds.cache.size} servers.`)
+   }, 2500)
 }

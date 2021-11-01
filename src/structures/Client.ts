@@ -10,7 +10,6 @@ import { promisify } from "util";
 import { glob } from "glob";
 const { TOKEN, DB } = process.env;
 const globPromise = promisify(glob);
-
 class Dash extends Client {
 	constructor(options = {}) {
 		super({
@@ -30,13 +29,24 @@ class Dash extends Client {
 			],
 			partials: ["CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION", "USER"],
 			allowedMentions: {
-				repliedUser: false
-			}
+				repliedUser: false,
+			},
 		});
 	}
 	public commands: Collection<string, Command> = new Collection();
 	public slashCommands: Collection<string, SlashCommand> = new Collection();
-	public dontenv: Config = { TOKEN: TOKEN, DB: DB }
+	public config: Config = {
+		TOKEN: TOKEN,
+		DB: DB,
+		owners: ["462936117596127232"],
+		emojis: {
+			tick: "<:Green_tick:901204370429968455>",
+			cross: "<:Red_ex:901204370425782292>",
+			warning: "<:Orange_ex:901204370069282826>",
+			gray: "<:Gray_dash:901204370442567761>",
+			info: "<:Blue_ex:901204369498841130>"
+		}
+	};
 	public async init() {
 		this.login(TOKEN);
 		connect(DB)
@@ -56,8 +66,8 @@ class Dash extends Client {
 			const splitted = value.split("/");
 			const directory = splitted[splitted.length - 2];
 			if (file.command.name) {
-				const run = file.run
-				const properties = { directory, ...file.command, run};
+				const run = file.run;
+				const properties = { directory, ...file.command, run };
 				this.commands.set(file.command.name, properties);
 			}
 		});
@@ -67,7 +77,7 @@ class Dash extends Client {
 			`${process.cwd()}/src/events/**/*.ts`
 		);
 		eventFiles.map(async (evenFile: string) => {
-			const event = (await import(evenFile));
+			const event = await import(evenFile);
 			this.on(event.event.name, event.run.bind(null, this));
 		});
 	}

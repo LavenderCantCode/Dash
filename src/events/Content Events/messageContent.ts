@@ -1,4 +1,3 @@
-// throws error on "c.commands.aliases?.includes(..)" because i dont have an aliases exported on the command file, instead its in a object
 import Guilds from "../../models/Guild"
 import { Message } from "discord.js";
 import { Run, Event } from "../../structures/Event";
@@ -15,8 +14,14 @@ export const run: Run = async (client, message: Message) => {
       const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g)
       const command: any = client.commands.get(cmd.toLowerCase()) || client.commands.find(c => c.aliases?.includes(cmd.toLowerCase()))
       if (!command) return;
+      if (command.owner) {
+            if (!client.config.owners.includes(message.author.id)) return;
+      }
       if(command.premium) {
             if (guild.premium === false) return;
+      }
+      if(command.permissions) {
+            if(!message.member.permissions.has(command.permissions || [])) return;
       }
       await command.run(client, message, args)
 };

@@ -1,4 +1,4 @@
-import { Message } from "discord.js"
+import { Message, PermissionFlags } from "discord.js"
 import Client from "./Client"
 
 export interface Run {
@@ -10,6 +10,8 @@ export interface Command {
 	category: String;
 	description?: string;
 	aliases?: Array<string>;
-	usages?: Array<string>;
+	usage?: string;
 	premium?: boolean;
+	owner?: boolean;
+	permissions?: Array<keyof PermissionFlags>
 }
