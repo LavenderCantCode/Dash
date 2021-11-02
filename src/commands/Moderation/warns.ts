@@ -24,7 +24,7 @@ export const run: Run = async (client: Dash, message: Message, args: string[]) =
    if(warnings.length <= 0) {
       return message.reply({embeds: [
          new MessageEmbed()
-         .setDescription(`<@${member.id}> **has had no previous warnings.**`)
+         .setDescription(`<@${member.id}> has had no previous warnings.`)
          .setColor(`#EA193B`)
       ]})
    }

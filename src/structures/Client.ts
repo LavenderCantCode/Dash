@@ -45,7 +45,8 @@ class Dash extends Client {
 			warning: "<:Orange_ex:901204370069282826>",
 			gray: "<:Gray_dash:901204370442567761>",
 			info: "<:Blue_ex:901204369498841130>"
-		}
+		},
+		blackListedLinks: ['discord.gg/heevan']
 	};
 	public async init() {
 		this.login(TOKEN);

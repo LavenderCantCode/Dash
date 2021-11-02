@@ -1,7 +1,7 @@
 import Guilds from "../../models/Guild"
 import { Message } from "discord.js";
 import { Run, Event } from "../../structures/Event";
-
+import { AntiLink } from "../../structures/AntiLink";
 export const event: Event = {
       name: "messageCreate"
 }
@@ -9,6 +9,7 @@ export const run: Run = async (client, message: Message) => {
 	   let guild = await Guilds.findOne({ guildId: message.guild.id })
       if (!guild) { await Guilds.create({ guildId: message.guild.id }) }
       guild = await Guilds.findOne({ guildId: message.guild.id })
+      await AntiLink(message, client)
       const { prefix } = guild
       if (message.author.bot || !message.guild || !message.content.startsWith(prefix)) return;
       const [cmd, ...args] = message.content.slice(prefix.length).trim().split(/ +/g)

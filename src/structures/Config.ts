@@ -2,7 +2,8 @@ export interface Config {
    TOKEN: string,
    DB: string,
    owners: Array<string>,
-   emojis: Emojis
+   emojis: Emojis,
+   blackListedLinks: Array<string>
 }
 
 export interface Emojis {

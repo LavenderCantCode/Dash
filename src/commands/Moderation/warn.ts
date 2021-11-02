@@ -24,7 +24,7 @@ export const run: Run = async (client: Dash, message: Message, args: string[]) =
    const warnCount = await Warn(member, reason, message, message.member)
    message.channel.send({embeds: [
       new MessageEmbed()
-      .setDescription(`<@${member.id}> **has been warned. They now have \`${warnCount.length}\` warns.**`)
+      .setDescription(`<@${member.id}> has been warned. They now have **\`${warnCount.length}\`** warns.`)
       .setColor(`#EA193B`)
    ]})
 }

@@ -1,4 +1,4 @@
-import DiscordJs from "discord.js"
+import DiscordJs, { Message, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from "discord.js"
 import Warns from "../models/Warns"
 import { WarnsInterface } from "../functions/Interfaces"
 import MakeId from "./MakeId"
@@ -173,4 +173,54 @@ export const GetWarn = async (member: DiscordJs.GuildMember, message: DiscordJs.
      warn = `**Id:* ${Warning.id}\n**Date:** <t:${Math.floor(Warning.time)}:f>\n**Channel:** ${name}\n**Moderator:** ${moderator.user.tag}\n**Reason:** \`\`\`\n ${Warning.reason} \n\`\`\``
      return warn
    }
+}
+
+export const ClearAllWarnsServer = async (guild: DiscordJs.Guild, message: DiscordJs.Message) => {
+   const row = new MessageActionRow()
+   .addComponents(
+      new MessageButton()
+      .setStyle("SUCCESS")
+      .setEmoji("<:HE_Green_tick:901773316090642454>")
+      .setCustomId("confirm"),
+      new MessageButton()
+      .setStyle("DANGER")
+      .setEmoji("<:HE_Red_ex:901773315507625986>")
+      .setCustomId("cancel"),
+   )
+
+   const embed = new MessageEmbed()
+   .setDescription(`<@${message.author.id}> are you sure you would like to **clear all warns for this server**`)
+   .setColor("#EA193B")
+
+   const msg = await message.reply({embeds: [embed], components: [row]})
+   const collector = msg.createMessageComponentCollector({componentType: "BUTTON"})
+   collector.on("collect", async (interaction) => {
+      if(interaction.user.id !== message.author.id) return interaction.deferUpdate();
+      if(interaction.isButton()) {
+         if(interaction.customId === "confirm") {
+            const warns = await Warns.find({guildId: interaction.guild.id})
+            let length = warns.length
+            const TotalWarns = 0
+            warns.forEach(async (warn) => {
+               TotalWarns + warn.warns.length
+               await Warns.findOneAndRemove({guildId: interaction.guild.id, userId: warn.userId})
+            })
+            msg.edit({embeds: [
+               new MessageEmbed()
+               .setDescription(`Removed all warns for **${interaction.guild.name}**.`)
+               .setColor("#EA193B")
+            ],
+            components: []})
+            await interaction.deferUpdate()
+         } else if(interaction.customId === "cancel") {
+             msg.edit({embeds: [
+               new MessageEmbed()
+               .setDescription(`Process has been cancelled.`)
+               .setColor("#EA193B")
+            ],
+            components: []})
+            await interaction.deferUpdate()
+         }
+      }
+   })
 }
