@@ -8,9 +8,15 @@ export interface GuildConfig {
    maxWarnsBeforeBan: number;
    disabledCommands: Array<string>;
    antiLinks: Array<string>;
-   deleteDiscordInviteLinks: boolean,
-   antiLink: boolean,
-   antiLinkRes: string
+   antiLinkAction: Array<string>,
+   antiLink: boolean;
+   antiLinkRes: string;
+   errorLogChannel: string;
+   suggestionsChannelId: string;
+   chatFilterWords: Array<string>;
+   chatFilterAction: Array<string>,
+   chatFilter: boolean;
+   chatFilterRes: string;
 }
 export interface WarnsInterface {
    moderator: string;

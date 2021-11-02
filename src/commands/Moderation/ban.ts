@@ -7,7 +7,8 @@ export const command: Command = {
    name: "ban",
    description: "Ban a member",
    category: "Moderation",
-   permissions: ['BAN_MEMBERS']
+   permissions: ['BAN_MEMBERS'],
+   botPermissions: ["BAN_MEMBERS"]
 }
 export const run: Run = async (client: Dash, message: Message, args: string[]) => {
    if(!args.length || args.length <= 0) {
@@ -23,5 +24,9 @@ export const run: Run = async (client: Dash, message: Message, args: string[]) =
          new MessageEmbed()
          .setDescription(ban.msg)
          .setColor(`#EA193B`)
-      ]})
+      ]}).then((msg) => {
+         setTimeout(() => {
+               msg.delete().catch(() => {})
+         }, 4000);
+      })
 }

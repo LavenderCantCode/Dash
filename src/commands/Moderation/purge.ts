@@ -7,6 +7,7 @@ export const command: Command = {
    description: "Purge an amount of messages in a channel.",
    category: "Moderation",
    permissions: ['MANAGE_MESSAGES'],
+   botPermissions: ['MANAGE_MESSAGES'],
    usage: `purge <amount> <channel>`
 }
 export const run: Run = async (client: Dash, message: Message, args: string[]) => {
@@ -24,7 +25,11 @@ export const run: Run = async (client: Dash, message: Message, args: string[]) =
             new MessageEmbed()
             .setDescription(`Deleted a total of \`${messages.size}/${amount}\` messages in <#${channel.id}>`)
             .setColor(`#EA193B`)
-         ]})
+         ]}).then((msg) => {
+            setTimeout(() => {
+                  msg.delete().catch(() => {})
+            }, 4000);
+         })
 
       })
 

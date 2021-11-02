@@ -9,12 +9,6 @@ export const Warn = async (member: DiscordJs.GuildMember, reason: string, messag
    const { guild } = message
    let warns = await Warns.findOne({guildId: guild.id, userId: member.id})
    if(!warns) { await Warns.create({guildId: guild.id, userId: member.id}) }
-   const serverConfig = await Guild.findOne({guildId: guild.id})
-   if(serverConfig.deleteModerationMessage) { 
-      setTimeout(() => {
-         message.delete()
-      }, 100); 
-   }
    await Warns.findOneAndUpdate({guildId: guild.id, userId: member.id}, {
       $push: {
          warns: [
@@ -63,6 +57,28 @@ export const Ban = async (member: DiscordJs.GuildMember, reason: string, message
       msg: `<@${member.id}> **has been successfully banned**.`
    }
    return res 
+}
+
+export const Unban = async (memberId: string, message: DiscordJs.Message) => {
+   let res = {
+      status: undefined,
+      msg: undefined
+   }
+    message.guild.bans.fetch().then((bans) => {
+         if(bans.size === 0) { 
+           res['msg'] = `This server has no bans.`
+            
+         } else {
+         const BannedMember = bans.find(u => u.user.id === memberId.toLowerCase() || u.user.tag === memberId.toLowerCase() || u.user.username === memberId.toLowerCase())
+         if(!BannedMember) { 
+            res['msg'] = `\`${memberId}\` is not a valid banned member.`
+            
+          } else {
+            message.guild.members.unban(BannedMember.user)
+            res['msg'] = `Successfully unbanned \`${memberId}\``
+          } 
+         }
+   })
 }
 
 export const Kick = async (member: DiscordJs.GuildMember, reason: string, message: DiscordJs.Message) => {
@@ -170,7 +186,7 @@ export const GetWarn = async (member: DiscordJs.GuildMember, message: DiscordJs.
       })
       const moderator = message.guild.members.cache.find(m => m.id === Warning.moderator)
       const { name } = message.guild.channels.cache.find(c => c.id === Warning.channel)
-     warn = `**Id:* ${Warning.id}\n**Date:** <t:${Math.floor(Warning.time)}:f>\n**Channel:** ${name}\n**Moderator:** ${moderator.user.tag}\n**Reason:** \`\`\`\n ${Warning.reason} \n\`\`\``
+     warn = `**Id:** ${Warning.id}\n**Date:** <t:${Math.floor(Warning.time)}:f>\n**Channel:** ${name}\n**Moderator:** ${moderator.user.tag}**\n**Reason:** \`\`\`\n ${Warning.reason} \n\`\`\``
      return warn
    }
 }

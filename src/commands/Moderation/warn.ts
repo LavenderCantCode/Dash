@@ -22,9 +22,18 @@ export const run: Run = async (client: Dash, message: Message, args: string[]) =
    }
    const reason = args.slice(1).join(" ") || "No reason provided."
    const warnCount = await Warn(member, reason, message, message.member)
+   if(serverConfig.deleteModerationMessage) { 
+      setTimeout(() => {
+         message.delete()
+      }, 100); 
+   }
    message.channel.send({embeds: [
       new MessageEmbed()
       .setDescription(`<@${member.id}> has been warned. They now have **\`${warnCount.length}\`** warns.`)
       .setColor(`#EA193B`)
-   ]})
+   ]}).then((msg) => {
+      setTimeout(() => {
+            msg.delete().catch(() => {})
+      }, 4000);
+   })
 }

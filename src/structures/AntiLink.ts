@@ -81,16 +81,25 @@ export const AntiLink = async (message: Message, client: Dash) => {
    const guild = await GetGuildConfig(message.guild)
    if(guild.antiLink) {
       guild.antiLinks.forEach((link) => {
-
          const Regex = new RegExp(`(https?:\/\/)?(www.\.)?(${link})\/.+[a-z]`, "gim")
          const RegexWithoutRoute = new RegExp(`(https?:\/\/)?(www.\.)?(${link})`, "gim")
          message.content.split(" ").forEach((arg) => {
          if(client.config.blackListedLinks.includes(arg)) return;
             if(message.member.permissions.has("ADMINISTRATOR")) return;
             if(Regex.test(arg) || RegexWithoutRoute.test(arg)) {
-               Warn(message.member, "Anti link triggered. [AUTOMOD]", message, message.guild.members.cache.find(m => m.id === client.user.id))
-               if(!guild.deleteModerationMessage) { message.delete() }
-               message.channel.send({content: `${DefaultFormatter(guild.antiLinkRes, message.member)}`})
+               if(guild.antiLinkAction.includes("ban")) {
+                  message.member.ban({reason: "Anti link triggered [AUTO MOD]"}).catch((err) => {})
+               }
+               if(guild.antiLinkAction.includes("kick")) {
+                  message.member.kick("Anti link triggered [AUTO MOD]").catch((err) => {})
+               }
+               if(guild.antiLinkAction.includes("delete")) {
+                  message.delete().catch(() => {})
+               }
+               if(guild.antiLinkAction.includes("warn")) {
+                  Warn(message.member, "Anti link triggered. [AUTO MOD]", message, message.guild.members.cache.find(m => m.id === client.user.id))
+               }
+               message.channel.send({content: `${DefaultFormatter(guild.antiLinkRes, message.member, message)}`})
             }
          })
       })

@@ -13,5 +13,6 @@ export interface Command {
 	usage?: string;
 	premium?: boolean;
 	owner?: boolean;
-	permissions?: Array<keyof PermissionFlags>
+	permissions?: Array<keyof PermissionFlags>,
+	botPermissions?: Array<keyof PermissionFlags>,
 }

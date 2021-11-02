@@ -2,6 +2,7 @@ import Guilds from "../../models/Guild"
 import { Message } from "discord.js";
 import { Run, Event } from "../../structures/Event";
 import { AntiLink } from "../../structures/AntiLink";
+import { UnderlineFormatter } from "../../structures/Formatters";
 export const event: Event = {
       name: "messageCreate"
 }
@@ -23,6 +24,15 @@ export const run: Run = async (client, message: Message) => {
       }
       if(command.permissions) {
             if(!message.member.permissions.has(command.permissions || [])) return;
+      }
+      if(command.botPermissions) {
+            if(!message.guild.me.permissions.has(command.botPermissions || [])) {
+                  let botperms = []
+                  command.botPermissions.forEach((perm) => {
+                        botperms.push(UnderlineFormatter(perm))
+                  })
+                  return message.channel.send({content: `**${message.author.username}**, I am missing the required permissions to run this command. (\`${botperms.join("`, `")}\`)`})
+            }
       }
       await command.run(client, message, args)
 };

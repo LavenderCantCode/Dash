@@ -7,7 +7,8 @@ export const command: Command = {
    name: "kick",
    description: "Kick a member",
    category: "Moderation",
-   permissions: ['KICK_MEMBERS']
+   permissions: ['KICK_MEMBERS'],
+   botPermissions: ["KICK_MEMBERS"]
 }
 export const run: Run = async (client: Dash, message: Message, args: string[]) => {
    if(!args.length || args.length <= 0) {
@@ -23,5 +24,9 @@ export const run: Run = async (client: Dash, message: Message, args: string[]) =
          new MessageEmbed()
          .setDescription(kick.msg)
          .setColor(`#EA193B`)
-      ]})
+      ]}).then((msg) => {
+         setTimeout(() => {
+               msg.delete().catch(() => {})
+         }, 4000);
+      })
 }

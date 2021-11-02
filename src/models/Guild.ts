@@ -18,6 +18,10 @@ const schema = new Schema({
       type: Array,
       default: []
    },
+   errorLogChannel: {
+      type: String,
+      default: "none"
+   },
 
    // Moderation
    mutedRole: {
@@ -35,6 +39,7 @@ const schema = new Schema({
       type: Number
    },
 
+
    // Antilink
    antiLink: {
       type: Boolean, 
@@ -44,13 +49,38 @@ const schema = new Schema({
       type: Array,
       default: []
    },
-   deleteDiscordInviteLinks: {
-      type: Boolean,
-      default: true
-   },
    antiLinkRes: {
       type: String,
       default: `**{{member.user.username}}**, Please do not send those links here! You have been warned.`
+   },
+   antiLinkAction: {
+      type: Array,
+      default: ["delete", "warn"]
+   },
+
+   
+   // Chat filter
+   chatFilter: {
+      type: Boolean, 
+      default: false
+   },
+   chatFilterWords: {
+      type: Array,
+      default: []
+   },
+   chatFilterRes: {
+      type: String,
+      default: `**{{member.user.username}}**, Please do not send those words here! You have been warned.`
+   },
+   chatFilterAction: {
+      type: Array,
+      default: ["delete", "warn"]
+   },
+
+   // Misc
+   suggestionsChannelId: {
+      type: String,
+      default: "none"
    }
 
 })

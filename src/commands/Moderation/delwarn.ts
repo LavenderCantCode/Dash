@@ -25,5 +25,9 @@ export const run: Run = async (client: Dash, message: Message, args: string[]) =
       new MessageEmbed()
       .setDescription(Action.msg)
       .setColor(`#EA193B`)
-   ]})
+   ]}).then((msg) => {
+      setTimeout(() => {
+            msg.delete().catch(() => {})
+      }, 4000);
+   })
 }
